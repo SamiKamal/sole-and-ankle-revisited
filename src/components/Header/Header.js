@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 
-import { COLORS, WEIGHTS } from '../../constants';
+import { COLORS, QUEREIS, WEIGHTS } from '../../constants';
 import Logo from '../Logo';
 import SuperHeader from '../SuperHeader';
 import MobileMenu from '../MobileMenu';
+import Icon from '../Icon';
+import VisuallyHidden from '../VisuallyHidden';
 
 const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = React.useState(false);
@@ -30,6 +32,20 @@ const Header = () => {
           <NavLink href="/collections">Collections</NavLink>
         </Nav>
         <Side />
+        <OnMobile>
+          <IconWrapper>
+            <Icon id="shopping-bag"/>
+            <VisuallyHidden>Shopping cart</VisuallyHidden>
+          </IconWrapper>
+          <IconWrapper>
+            <Icon id="search"/>
+            <VisuallyHidden>Search for items</VisuallyHidden>
+          </IconWrapper>
+          <IconWrapper onClick={() => setShowMobileMenu(true)}>
+            <Icon id="menu"/>
+            <VisuallyHidden>Navigation menu</VisuallyHidden>
+          </IconWrapper>
+          </OnMobile>
       </MainHeader>
 
       <MobileMenu
@@ -45,13 +61,35 @@ const MainHeader = styled.div`
   align-items: baseline;
   padding: 18px 32px;
   height: 72px;
-  border-bottom: 1px solid ${COLORS.gray[300]};
+  border-bottom: 1px solid var(--color-gray-300);
+  z-index: -1;
+  overflow-x: auto;
+  height: auto;
+  
+  @media ${QUEREIS.tabletAndDown}{
+    border-top: 4px solid var(--color-gray-900);
+  }
+
+  @media ${QUEREIS.phoneAndDown}{
+    padding: 18px 16px;
+  }
 `;
 
 const Nav = styled.nav`
   display: flex;
-  gap: 48px;
+  gap: clamp(
+    1rem,
+    4.1vw - 1.75rem,
+    3rem
+  );
   margin: 0px 48px;
+
+  @media ${QUEREIS.tabletAndDown}{
+    margin-left: auto;
+    justify-content: space-between;
+    margin-right: 0;
+  }
+
 `;
 
 const Side = styled.div`
@@ -62,12 +100,36 @@ const NavLink = styled.a`
   font-size: 1.125rem;
   text-transform: uppercase;
   text-decoration: none;
-  color: ${COLORS.gray[900]};
-  font-weight: ${WEIGHTS.medium};
+  color: var(--color-gray-900);
+  font-weight: var(--font-weight-medium);
 
   &:first-of-type {
-    color: ${COLORS.secondary};
+    color: var(--color-secondary);
   }
+
+  @media ${QUEREIS.tabletAndDown}{
+    display: none;
+  }
+
 `;
+
+const OnMobile = styled.div`
+  display: none;
+
+  @media ${QUEREIS.tabletAndDown}{
+    display: flex;
+    margin-left: auto;
+  }
+`
+
+const IconWrapper = styled.button`
+  border: none;
+  background: none;
+
+  &:not(:last-child){
+    margin-right: 16px;
+  }
+
+`
 
 export default Header;
